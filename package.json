@@ -1,0 +1,30 @@
+{
+  "name": "nimbus",
+  "version": "1.0.0",
+  "description": "Helper for flyers",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lowlighter/nimbus.git"
+  },
+  "author": "lowlighter",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lowlighter/nimbus/issues"
+  },
+  "homepage": "https://github.com/lowlighter/nimbus#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3",
+    "express": "^4.17.1",
+    "leaflet": "^1.6.0",
+    "moment": "^2.24.0",
+    "vue": "^2.6.11"
+  },
+  "devDependencies": {
+    "less": "^3.11.1"
+  }
+}

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>🛫 Nimbus</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet/less" type="text/css" href="/css/styles.less" />
+  </head>
+  <body>
+
+    <main>
+      <!-- Header -->
+      <header>
+        <!-- App description -->
+        <div class="title" @click="plan.show.load.home = true">
+          ☁️ {{ app.name }}
+          <sub class="version">{{ app.version }}</sub>
+        </div>
+        <!-- Menu -->
+        <nav class="menu">
+          <button @click="plan.show.load.home = true">ALL</button>
+          <button @click="plan.show.load.map = true">MAP</button>
+          <button @click="plan.show.load.checks = true">CHECK</button>
+          <button @click="plan.show.load.temsi = true">TEMSI</button>
+          <button @click="plan.show.load.wintem = true">WINTEM</button>
+          <button @click="plan.show.load.notam = true">NOTAM</button>
+        </nav>
+      </header>
+
+      <!-- Route -->
+      <transition-group name="list" tag="div" class="route">
+        <div class="airport" v-for="(airport, i) in plan.route" :key="i">
+          <!-- Remove -->
+          <div class="remove">
+            <button @click="plan.remove(airport)">❌</button>
+          </div>
+          <!-- Airport ICAO, name and location -->
+          <div class="infos">
+            <h1 class="icao">
+              {{ airport }}
+              <i v-if="i === 0">🛫</i>
+              <i v-if="i === plan.route.length-1">🛬</i>
+              <i v-if="(i > 0)&&(plan.route.length-1 > i)">☁️</i>
+              <small v-if="i" class="distance">
+                <span :title="app.lang.plan.route.airport.distance.previous"><small>+</small>{{ dist(plan.route[i-1], airport) }}<small>km</small></span> 
+                <span :title="app.lang.plan.route.airport.distance.total"><small>(+</small>{{ ttdist(plan.route.slice(0, i+1)) }}<small>km)</small></span>
+              </small>
+            </h1>
+            <h2 class="name">{{ about(airport).name }}</h2>
+            <h3 class="location">{{ about(airport).location }}</h3>
+          </div>
+          <!-- Details -->
+          <div class="details">
+            <div class="airfield">
+              <span :title="app.lang.airport.altitude"><i>⛰️</i> {{ app.lang.altitude_short }} {{ about(airport).alt }} ft.</span>
+              <span :title="app.lang.airport.coordinates"><i>🧭</i> {{ latlng(about(airport)) }}</span>
+            </div>
+            <div class="services">
+              <i v-if="about(airport).services.avt" :title="app.lang.airport.services.avt">⛽</i>
+              <i v-if="about(airport).services.rep" :title="app.lang.airport.services.rep">🔧</i>
+              <i v-if="about(airport).services.eat" :title="app.lang.airport.services.eat">🍽️</i>
+              <i v-if="about(airport).services.slp" :title="app.lang.airport.services.slp">🛏️</i>
+            </div>
+          </div>
+          <!-- Actions -->
+          <div class="actions">
+            <button @click="plan.show.load.vac = airport">🗺️ {{ app.lang.airport.vac }}</button>
+          </div>  
+        </div>
+        <!-- Add airport to plan route -->
+        <div class="airport new" key="new">
+          <label class="icao">
+            <input type="text" v-model="plan.cache.airport.new.value" @keyup.enter="plan.update(plan.cache.airport.new.value)" :placeholder="app.lang.plan.route.airport.new">
+            <div class="suggestions">
+              <div class="list" v-if="plan.cache.airport.new.value.length">
+                <div v-for="(airport, icao) in data.airports" @click="plan.update(icao)" v-if="airfilter(icao, airport.name, plan.cache.airport.new.value)">
+                  <b>{{ icao }}</b> 
+                  {{ airport.name }}
+                </div>
+              </div>
+            </div>
+          </label>
+        </div>
+      </transition-group>
+
+      <!-- Documents -->
+      <div class="documents">
+        <transition name="fade" mode="out-in">
+          <!-- Home -->
+          <div v-if="plan.show.home" class="home" key="home">
+            <div class="menu">
+              <div class="util" @click="plan.show.load.map = true">
+                <i>🌍</i>
+                <b>MAP</b>
+              </div>
+              <div class="util">
+                <i>🗺️</i>
+                <b>VAC</b>
+                <input type="text" v-model="plan.cache.vac" @keyup.enter="plan.cache.vac.toLocaleUpperCase() in data.airports ? plan.show.load.vac = plan.cache.vac : null" :placeholder="app.lang.airport.icao">
+              </div>
+              <div class="util" @click="plan.show.load.checks = true">
+                <i>📝</i>
+                <b>CHECK</b>
+              </div>
+              <div class="util" @click="plan.show.load.temsi = true">
+                <i>⛅</i>
+                <b>TEMSI</b>
+              </div>
+              <div class="util" @click="plan.show.load.wintem = true">
+                <i>☁️<span>🌡️</span></i>
+                <b>WINTEM</b>
+              </div>
+              <div class="util" @click="plan.show.load.notam = true">
+                <i>💬</i>
+                <b>NOTAM</b>
+              </div>
+              <div class="util" @click="plan.show.load.help = true">
+                <i>ℹ️</i>
+                <b>HELP</b>
+              </div>
+              <div class="util" @click="document.location.href='https://github.com/lowlighter/nimbus'">
+                <i>🦑</i>
+                <b>GITHUB</b>
+              </div>
+            </div>
+            <div class="warning">{{ app.lang.app.warning }}</div>
+          </div>
+          <!-- About -->
+          <div v-if="plan.show.help" class="help" key="help">
+            <!-- App -->
+            <div class="app">
+              <p v-for="p in app.lang.app.description" v-html="p"></p>
+            </div>
+            <!-- Features -->
+            <div class="features">
+              <h1>{{ app.lang.app.features.name }}</h1>
+              <div v-for="category in app.lang.app.features.list" class="feature">
+                <h2>{{ category.name }}</h2>
+                <ul>
+                  <li v-for="feature in category.features">
+                    {{ feature.name }}
+                    <ul v-if="feature.details">
+                      <li v-for="detail in feature.details">{{ detail.name }}</li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- Checklist -->
+          <div v-if="plan.show.checks" class="checks" key="checks">
+            <div v-for="(checks, categorie) in plan.checks">
+              <h1>{{ app.lang.plan.checks[categorie].name }}</h1>
+              <div class="list">
+                <label class="check" v-for="(_, check) in checks" v-if="checks[check].when">
+                  <input type="checkbox" v-model="checks[check].value">
+                  {{ (app.lang.plan.checks[categorie][check]||{}).name }}<br>
+                  <small class="details" v-if="(app.lang.plan.checks[categorie][check]||{}).details">{{ app.lang.plan.checks[categorie][check].details }}</small>
+                  </label>
+              </div>
+            </div>
+          </div>
+          <!-- VAC -->
+          <embed v-if="plan.show.vac" :src="'/vac/'+plan.show.vac" type="application/pdf" key="vac">
+          <!-- Temsi -->
+          <embed v-if="plan.show.temsi" src="/temsi" type="application/pdf" key="temsi">
+          <!-- Wintem -->
+          <embed v-if="plan.show.wintem" src="/wintem" type="application/pdf" key="wintem">
+          <!-- Notam -->
+          <div class="notam" v-if="plan.show.notam" key="notam">
+            <div v-if="plan.notam" v-html="plan.notam"></div>
+            <div v-else>{{ app.lang.plan.notam.loading }}</div>
+          </div>
+          <!-- Map -->
+          <div class="map" v-show="plan.show.map" key="map">
+            
+          </div>
+        </transition>
+      </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/js/vue.min.js"></script>
+    <script src="/js/less.min.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/nimbus.js"></script>
+
+  </body>
+</html>

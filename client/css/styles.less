@@ -1,0 +1,417 @@
+//Body
+  body {
+    margin: 0;
+    padding: 0;
+    font-family:lato,-apple-system,BlinkMacSystemFont,segoe ui,Roboto,helvetica neue,Arial,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol;
+  }
+
+//Transition
+  .transition() {
+    transition: all .2s ease-in;
+  }
+
+//Main
+  main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    //Button
+      button {
+        cursor: pointer;
+        color: #3498db;
+        border: 1px solid #3498db;
+        background: transparent;
+        padding: .25rem .5rem;
+        font-size: .75rem;
+        line-height: 1rem;
+        border-radius: .25rem;
+        &:hover {
+          color: white;
+          background-color: #3498db;
+          border-color: #3498db;
+          .transition;
+        }
+      }
+    //Inputs
+      input {
+        cursor: pointer;
+        background-color: #fafbfc;
+        padding: .25rem .5rem;
+        font-size: .75rem;
+        line-height: 1rem;
+        border-radius: .25rem;
+        border: 1px solid rgba(27,31,35,.2);
+        &:focus {
+          border-color: #2188ff;
+          outline: none;
+          box-shadow: inset 0 1px 2px rgba(27,31,35,.075),0 0 0 .2em rgba(3,102,214,.3);
+        }
+      }
+    //Icon
+      i {
+        font-style: normal;
+        text-align: center;
+      }
+  }
+
+//Header
+  header {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    color: white;
+    background-color: #24292e;
+    padding: .75rem 0;
+    //Bigger screens
+      @media (min-width: 32rem) {
+        & { 
+          flex-direction: row;
+          justify-content: space-between;
+        }
+
+        //Title
+          .title {
+            text-align: left;
+          }
+        //Menu
+          .menu {
+            justify-content: right !important;
+          }
+      }
+    //Title
+      .title {
+        padding: 0 1rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        //Version
+          .version {
+            font-size: .5rem;
+            font-style: italic;
+          }
+        //Hovered
+          &:hover {
+            cursor: pointer;
+            .transition;
+            color: #3498db;
+          }
+      }
+    //Menu
+      .menu {
+        padding: 0 1rem;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        //Buttons
+          button {
+            color: white;
+            background: transparent;
+            border: none;
+            &:hover {
+              color: #3498db;
+              .transition;
+            }
+          }
+      }
+  }
+
+//Route
+  .route {
+    flex-shrink: 0;
+    padding: 0 1rem;
+    display: flex;
+    overflow: auto hidden;
+    align-items: center;
+    height: 8.8rem;
+    //Airport
+      .airport {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        width: 16rem;
+        padding: .5rem 1rem;
+        height: 100%;
+        position: relative;
+        &:hover {
+          .transition;
+        }
+        //Remove button
+          .remove {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+          }
+        //Infos
+          .infos {
+            //ICAO
+              .icao {
+                margin: 0;
+                padding: 0;
+                font-size: 1.5rem;
+              }
+            //Distance
+              .distance {
+                font-style: italic;
+                font-weight: normal;
+                color: gray;
+                font-size: .8rem;
+              }
+            //Name
+              .name {
+                margin: 0;
+                padding: 0;
+                font-size: 1rem;
+                white-space: pre;
+              }
+            //Location
+              .location {
+                margin: 0;
+                padding: 0;
+                font-size: .8rem;
+                color: gray;
+                font-style: italic;
+                font-weight: normal;
+                white-space: pre;
+              }
+          }
+        //Details
+          .details {
+            display: flex;
+            font-size: .8rem;
+            //Airfield
+              .airfield {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+              }
+            //Services
+              .services {
+                padding: 0 .5rem;
+                display: flex;
+                width: 25%;
+              }
+          }
+        //Actions
+          .actions {
+            padding-top: .25rem;
+          }
+        //Add new airport
+          &.new {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 8.8rem;
+            //Input
+              label {
+                margin: .5rem;
+                height: 100%;
+                width: 100%;
+                border-radius: .25rem;
+                color: rgba(27,31,35,.7);
+                border: 2px dashed rgba(27,31,35,.2);
+                padding: .25rem 1rem 0;
+                text-align: center;
+                overflow: hidden;
+                //Input
+                  input {
+                    margin-top: .25rem;
+                    width: calc(100% - 2rem);
+                  }
+                //Suggestions
+                  .suggestions {
+                    position: relative;
+                    height: 100%;
+                    width: 100%;
+                    text-align: left;
+                    //Suggestions list
+                      .list {
+                        position: absolute;
+                        overflow: hidden;
+                        width: 100%;
+                        //Single suggestion
+                          > div {
+                            font-size: .75rem;
+                            b { 
+                              font-family: 'Courier New', Courier, monospace;
+                            }
+                            &:hover {
+                              color: white;
+                              background-color: #3498db;
+                              border-color: #3498db;
+                              .transition;
+                              cursor: pointer;
+                            }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  }
+
+//Documents (VAC, TEMSI, WINTEM, NOTAM, etc.)
+  .documents {
+    flex-grow: 1;
+    width: 100%;
+    background-color: #24292e;
+    overflow: auto;
+    height: 800px;
+    //Home
+      .home {
+        color: white;
+        padding: 1rem 2rem;
+        //Menu
+          .menu {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            //Utilitaries shortcuts
+              .util {
+                flex-shrink: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                border-radius: .25rem;
+                border: 1px solid black;
+                background-color: #3F4448;
+                height: 7rem;
+                width: 7rem;
+                margin: .75rem;
+                //Icon
+                  i {
+                    font-size: 2rem;
+                    position: relative;
+                    span {
+                      position: absolute;
+                      left: 0;
+                      right: 0;
+                    }
+                  }
+                //Input
+                  input {
+                    width: 3rem;
+                    text-align: center;
+                  }
+                &:hover {
+                  .transition;
+                  background-color: #FAFBFC;
+                  color: black;
+                  cursor: pointer;
+                }
+              }
+          }
+        //Warning
+          .warning {
+            margin-top: 2rem;
+            color: gray;
+            text-align: center;
+            font-size: .8rem;
+          }
+      }
+    //Help
+      .help {
+        color: white;
+        padding: 1rem 2rem;
+        //App
+          .app {
+            margin-bottom: 2.5rem;
+            //Description
+              p {
+                margin: 0;
+              }
+          }
+        //Features
+          .features {
+            //Title
+              h1 {
+                font-size: 1.25rem;
+              }
+            //Feature
+              .feature {
+                //Categorie
+                  h2 {
+                    font-size: 1.1rem;
+                  }
+                //List
+                  ul {
+                    font-weight: normal;
+                    padding-left: 2rem;
+                  }
+                  > ul {
+                    font-weight: bold;
+                    list-style-type: none;
+                  }
+              }
+          }
+      }
+    //Checks
+      .checks {
+        color: white;
+        padding: 1rem 2rem;
+        //Categorie
+          h1 {
+            font-size: 1.25rem;
+          }
+        //List
+          .list {
+            padding-left: 2rem;
+            display: flex;
+            flex-direction: column;
+            //Check
+              .check {
+                .details {
+                  color: gray;
+                  padding-left: 2rem;
+                }
+              }
+          }
+      }
+    //Embed pdf
+      embed {
+        width: 100%;
+        height: 100%;
+      }
+    //Notam
+      .notam {
+        color: white;
+        padding: 1rem 2rem;
+      }
+    //Map
+      .map {
+        width: 100%;
+        height: 100%;
+        map {
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+      }
+  }
+
+//Fade transition
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .2s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+
+  .list-item {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .list-enter-active, .list-leave-active {
+    transition: all 1s;
+  }
+  .list-enter, .list-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+  }
