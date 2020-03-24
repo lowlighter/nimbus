@@ -4,17 +4,16 @@
   const request = require("request")
   const moment = require("moment")
   const cheerio = require("cheerio")
+  const argv = require("minimist")(process.argv.slice(2))
 
 //Nimbus app
   const nimbus = {
     //Check values
       check(values, options) {
-        console.log(values)
         //Iterate though defined options
           try {
             const checked = {error:false}
             for (let param in options) {
-            console.log("checking "+param)
               //Options and values
                 const {dvalue, required, transform, check, post} = options[param]
                 let value = values[param]
@@ -36,12 +35,10 @@
               //Register value
                 checked[param] = value
             }
-            console.log(checked)
             return checked
           }
         //Handle errors
           catch (e) { 
-            console.log(e)
             return {error:true} 
           }
       },
@@ -105,7 +102,6 @@
         return res.sendStatus(400)
     //Handle request
       const date = `${year}${month}${day}${hours}0000`
-      console.log(date)
       const url = `https://aviation.meteo.fr/FR/aviation/affiche_image.php?login=fampsLSMuYmAdrAK4GqaaGhim2ppYWnd1uE%3D&layer=sigwx/fr/france&echeance=${date}`
       request.get(url).pipe(res)
   })
@@ -148,19 +144,6 @@
       const utc = moment(`${moment.utc().year()}${month}${day}T${hours}${minutes}`).add(15, "minutes").subtract(1, "hour")
       const utc_hours = `${nimbus.post.pad2(utc.hours())}${nimbus.post.pad2(utc.minutes())}`
       icaos.push(...new Array(16).fill(""))
-      console.log({
-        aerodrome1:icaos[0], aerodrome2:icaos[1], aerodrome3:icaos[2], aerodrome4:icaos[3], aerodrome5:icaos[4], aerodrome6:icaos[5], aerodrome7:icaos[6], aerodrome8:icaos[7], aerodrome9:icaos[8], aerodrome10:icaos[9], aerodrome11:icaos[10], aerodrome12:icaos[11], aerodrome13:icaos[12], aerodrome14:icaos[13], aerodrome15:icaos[14], aerodrome16:icaos[15],
-        date:`${day}${month}`,
-        heure:utc_hours,
-        dureeNotam:duration,
-        vfr:"on",
-        ifr:"on",
-        rayon:radius,
-        plafond:fl,
-        presentationDetaillee:"on",
-        notamGPS:"on",
-        BulAeroSoumis:"++++OK++++",
-      })
     //Handle request
       const jar = request.jar()
       request.get("http://olivia.aviation-civile.gouv.fr/", {jar, followAllRedirects: true}, () => 
@@ -269,4 +252,5 @@
 //OPMET
 
 //Start server
-  app.listen(3000, () => console.log("Listening on port 3000"))
+  const port = argv.port||3000
+  app.listen(port, () => console.log(`Listening on port ${port}`))
